@@ -3,6 +3,7 @@ import { useState } from "react"
 function App() {
   const [tela, setTela] = useState("cardapio")
   const [produtoSelecionado, setProdutoSelecionado] = useState(null)
+  const [carrinho, setCarrinho] = useState([])
 
   const produtos = [
     {
@@ -42,9 +43,72 @@ function App() {
     setTela("detalhes")
   }
 
-  function voltarCardapio() {
+  function voltarCardapio(event) {
+    if (event) {
+      event.preventDefault()
+    }
+
     setTela("cardapio")
     setProdutoSelecionado(null)
+  }
+
+  function adicionarAoCarrinho() {
+    if (produtoSelecionado) {
+      const produtoExistente = carrinho.find(
+        (produto) => produto.nome === produtoSelecionado.nome
+      )
+
+      if (produtoExistente) {
+        setCarrinho(
+          carrinho.map((produto) =>
+            produto.nome === produtoSelecionado.nome
+              ? {
+                  ...produto,
+                  quantidade: (produto.quantidade || 1) + 1
+                }
+              : produto
+          )
+        )
+      } else {
+        setCarrinho([
+          ...carrinho,
+          {
+            ...produtoSelecionado,
+            quantidade: 1
+          }
+        ])
+      }
+
+      setTela("cardapio")
+      setProdutoSelecionado(null)
+    }
+  }
+
+  function abrirCarrinho(event) {
+    event.preventDefault()
+    setTela("carrinho")
+  }
+
+  function calcularTotal() {
+    return carrinho.reduce((total, produto) => {
+      const valor = Number(
+        produto.preco
+          .replace("R$ ", "")
+          .replace(".", "")
+          .replace(",", ".")
+      )
+
+      const quantidade = produto.quantidade || 1
+
+      return total + valor * quantidade
+    }, 0)
+  }
+
+  function quantidadeTotal() {
+    return carrinho.reduce(
+      (total, produto) => total + (produto.quantidade || 1),
+      0
+    )
   }
 
   return (
@@ -54,6 +118,7 @@ function App() {
         <h1>Barraca da Domingas</h1>
 
         <nav>
+
           <a href="#" onClick={voltarCardapio}>
             Cardápio
           </a>
@@ -62,9 +127,10 @@ function App() {
             Meus pedidos
           </a>
 
-          <a href="#">
-            🛒 Carrinho
+          <a href="#" onClick={abrirCarrinho}>
+            🛒 Carrinho ({quantidadeTotal()})
           </a>
+
         </nav>
       </header>
 
@@ -130,13 +196,90 @@ function App() {
                 {produtoSelecionado.preco}
               </strong>
 
-              <button className="add-cart-button">
+              <button
+                className="add-cart-button"
+                onClick={adicionarAoCarrinho}
+              >
                 Adicionar ao carrinho
               </button>
 
             </div>
 
           </div>
+
+        </main>
+      )}
+
+      {tela === "carrinho" && (
+        <main className="menu-content">
+
+          <button onClick={voltarCardapio}>
+            ← Voltar ao cardápio
+          </button>
+
+          <h2>Meu Carrinho</h2>
+
+          <p>Confira os produtos adicionados</p>
+
+          {carrinho.length === 0 ? (
+
+            <p>Seu carrinho está vazio.</p>
+
+          ) : (
+
+            <div>
+
+              {carrinho.map((produto) => {
+
+                const valor = Number(
+                  produto.preco
+                    .replace("R$ ", "")
+                    .replace(".", "")
+                    .replace(",", ".")
+                )
+
+                const quantidade = produto.quantidade || 1
+                const subtotal = valor * quantidade
+
+                return (
+                  <div
+                    key={produto.nome}
+                    className="product-card"
+                    style={{ marginBottom: "20px" }}
+                  >
+
+                    <h3>{produto.nome}</h3>
+
+                    <p>{produto.descricao}</p>
+
+                    <strong>{produto.preco}</strong>
+
+                    <p>
+                      Quantidade:{" "}
+                      <strong>{quantidade}</strong>
+                    </p>
+
+                    <p>
+                      Subtotal:{" "}
+                      <strong>
+                        R$ {subtotal.toFixed(2).replace(".", ",")}
+                      </strong>
+                    </p>
+
+                  </div>
+                )
+              })}
+
+              <div style={{ marginTop: "30px" }}>
+
+                <h3>
+                  Total: R$ {calcularTotal().toFixed(2).replace(".", ",")}
+                </h3>
+
+              </div>
+
+            </div>
+          )}
 
         </main>
       )}
