@@ -1,263 +1,295 @@
 import { useState } from "react"
 
 function App() {
-const [tela, setTela] = useState("cardapio")
-const [produtoSelecionado, setProdutoSelecionado] = useState(null)
-const [carrinho, setCarrinho] = useState([])
+  const [tela, setTela] = useState("login")
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null)
+  const [carrinho, setCarrinho] = useState([])
 
-const produtos = [
-{
-nome: "Pastel de Frango",
-descricao: "Pastel recheado com frango",
-preco: "R$ 7,00"
-},
-{
-nome: "Pastel de Carne",
-descricao: "Pastel recheado com carne",
-preco: "R$ 7,00"
-},
-{
-nome: "Pastel de Queijo",
-descricao: "Pastel recheado com queijo",
-preco: "R$ 7,00"
-},
-{
-nome: "Pastel de Pizza",
-descricao: "Pastel recheado com queijo, presunto e tomate",
-preco: "R$ 7,00"
-},
-{
-nome: "Pastel de Frango com Queijo",
-descricao: "Pastel recheado com frango e queijo",
-preco: "R$ 7,00"
-},
-{
-nome: "Refrigerante 200 ml",
-descricao: "Refrigerante em embalagem de 200 ml",
-preco: "R$ 3,00"
-}
-]
-
-function abrirDetalhes(produto) {
-setProdutoSelecionado(produto)
-setTela("detalhes")
-}
-
-function voltarCardapio(event) {
-if (event) {
-event.preventDefault()
-}
-
-setTela("cardapio")
-setProdutoSelecionado(null)
-
-}
-
-function adicionarAoCarrinho() {
-if (!produtoSelecionado) {
-return
-}
-
-const produtoExistente = carrinho.find(
-  (produto) => produto.nome === produtoSelecionado.nome
-)
-
-if (produtoExistente) {
-  setCarrinho(
-    carrinho.map((produto) =>
-      produto.nome === produtoSelecionado.nome
-        ? {
-            ...produto,
-            quantidade: (produto.quantidade || 1) + 1
-          }
-        : produto
-    )
-  )
-} else {
-  setCarrinho([
-    ...carrinho,
+  const produtos = [
     {
-      ...produtoSelecionado,
-      quantidade: 1
+      nome: "Pastel de Frango",
+      descricao: "Pastel recheado com frango",
+      preco: "R$ 7,00"
+    },
+    {
+      nome: "Pastel de Carne",
+      descricao: "Pastel recheado com carne",
+      preco: "R$ 7,00"
+    },
+    {
+      nome: "Pastel de Queijo",
+      descricao: "Pastel recheado com queijo",
+      preco: "R$ 7,00"
+    },
+    {
+      nome: "Pastel de Pizza",
+      descricao: "Pastel recheado com queijo, presunto e tomate",
+      preco: "R$ 7,00"
+    },
+    {
+      nome: "Pastel de Frango com Queijo",
+      descricao: "Pastel recheado com frango e queijo",
+      preco: "R$ 7,00"
+    },
+    {
+      nome: "Refrigerante 200 ml",
+      descricao: "Refrigerante em embalagem de 200 ml",
+      preco: "R$ 3,00"
     }
-  ])
-}
+  ]
 
-setTela("cardapio")
-setProdutoSelecionado(null)
+  function entrar(event) {
+    if (event) {
+      event.preventDefault()
+    }
 
-}
+    setTela("cardapio")
+  }
 
-function removerDoCarrinho(nomeProduto) {
-setCarrinho(
-carrinho.filter((produto) => produto.nome !== nomeProduto)
-)
-}
+  function abrirCriarConta(event) {
+    if (event) {
+      event.preventDefault()
+    }
 
-function abrirCarrinho(event) {
-event.preventDefault()
-setTela("carrinho")
-}
+    setTela("criarConta")
+  }
 
-function calcularTotal() {
-return carrinho.reduce((total, produto) => {
-const valor = Number(
-produto.preco
-.replace("R$ ", "")
-.replace(".", "")
-.replace(",", ".")
-)
+  function voltarLogin(event) {
+    if (event) {
+      event.preventDefault()
+    }
 
-  const quantidade = produto.quantidade || 1
+    setTela("login")
+  }
 
-  return total + valor * quantidade
-}, 0)
+  function abrirDetalhes(produto) {
+    setProdutoSelecionado(produto)
+    setTela("detalhes")
+  }
 
-}
+  function voltarCardapio(event) {
+    if (event) {
+      event.preventDefault()
+    }
 
-function quantidadeTotal() {
-return carrinho.reduce(
-(total, produto) => total + (produto.quantidade || 1),
-0
-)
-}
+    setTela("cardapio")
+    setProdutoSelecionado(null)
+  }
 
-return (
-<div className="menu-page">
+  function adicionarAoCarrinho() {
+    if (!produtoSelecionado) {
+      return
+    }
 
-  <header className="menu-header">
-    <h1>Barraca da Domingas</h1>
+    const produtoExistente = carrinho.find(
+      (produto) => produto.nome === produtoSelecionado.nome
+    )
 
-    <nav>
+    if (produtoExistente) {
+      setCarrinho(
+        carrinho.map((produto) =>
+          produto.nome === produtoSelecionado.nome
+            ? {
+                ...produto,
+                quantidade: (produto.quantidade || 1) + 1
+              }
+            : produto
+        )
+      )
+    } else {
+      setCarrinho([
+        ...carrinho,
+        {
+          ...produtoSelecionado,
+          quantidade: 1
+        }
+      ])
+    }
 
-      <a href="#" onClick={voltarCardapio}>
-        Cardápio
-      </a>
+    setTela("cardapio")
+    setProdutoSelecionado(null)
+  }
 
-      <a href="#">
-        Meus pedidos
-      </a>
+  function removerDoCarrinho(nomeProduto) {
+    setCarrinho(
+      carrinho.filter((produto) => produto.nome !== nomeProduto)
+    )
+  }
 
-      <a href="#" onClick={abrirCarrinho}>
-        🛒 Carrinho ({quantidadeTotal()})
-      </a>
+  function abrirCarrinho(event) {
+    if (event) {
+      event.preventDefault()
+    }
 
-    </nav>
-  </header>
+    setTela("carrinho")
+  }
 
-  {tela === "cardapio" && (
-    <main className="menu-content">
+  function calcularTotal() {
+    return carrinho.reduce((total, produto) => {
+      const valor = Number(
+        produto.preco
+          .replace("R$ ", "")
+          .replace(".", "")
+          .replace(",", ".")
+      )
 
-      <h2>Cardápio</h2>
+      const quantidade = produto.quantidade || 1
 
-      <p>Escolha seus produtos</p>
+      return total + valor * quantidade
+    }, 0)
+  }
 
-      <div className="products">
+  function quantidadeTotal() {
+    return carrinho.reduce(
+      (total, produto) => total + (produto.quantidade || 1),
+      0
+    )
+  }
 
-        {produtos.map((produto) => (
-          <div
-            className="product-card"
-            key={produto.nome}
-          >
+  return (
+    <div className="menu-page">
 
-            <div className="product-image">
-              Imagem
-            </div>
+      {tela === "login" && (
+        <main className="menu-content">
 
-            <h3>{produto.nome}</h3>
+          <h1>Barraca da Domingas</h1>
 
-            <p>{produto.descricao}</p>
+          <h2>Seu pastel, do seu jeito!</h2>
 
-            <strong>{produto.preco}</strong>
+          <h2>Bem-vindo!</h2>
 
-            <button
-              onClick={() => abrirDetalhes(produto)}
-            >
-              Ver detalhes
+          <p>Entre para fazer seu pedido.</p>
+
+          <form onSubmit={entrar}>
+
+            <label>Email:</label>
+
+            <input
+              type="email"
+              placeholder="Digite seu Email"
+            />
+
+            <label>Senha:</label>
+
+            <input
+              type="password"
+              placeholder="Digite sua senha"
+            />
+
+            <button type="submit">
+              Entrar
             </button>
 
-          </div>
-        ))}
+          </form>
 
-      </div>
+          <a href="#">
+            Esqueceu sua senha?
+          </a>
 
-    </main>
-  )}
+          <p>
+            Não possui conta?{" "}
+            <a href="#" onClick={abrirCriarConta}>
+              Criar conta
+            </a>
+          </p>
 
-  {tela === "detalhes" && produtoSelecionado && (
-    <main className="menu-content">
+        </main>
+      )}
 
-      <button onClick={voltarCardapio}>
-        ← Voltar ao cardápio
-      </button>
+      {tela === "criarConta" && (
+        <main className="menu-content">
 
-      <div className="product-detail">
+          <h1>Barraca da Domingas</h1>
 
-        <div className="product-detail-image">
-          Imagem do produto
-        </div>
+          <h2>Criar conta</h2>
 
-        <div className="product-detail-info">
+          <p>Preencha seus dados para criar sua conta.</p>
 
-          <h2>{produtoSelecionado.nome}</h2>
+          <form onSubmit={voltarLogin}>
 
-          <p>{produtoSelecionado.descricao}</p>
+            <label>Nome:</label>
 
-          <strong className="product-detail-price">
-            {produtoSelecionado.preco}
-          </strong>
+            <input
+              type="text"
+              placeholder="Digite seu nome"
+            />
 
-          <button
-            className="add-cart-button"
-            onClick={adicionarAoCarrinho}
-          >
-            Adicionar ao carrinho
+            <label>Email:</label>
+
+            <input
+              type="email"
+              placeholder="Digite seu email"
+            />
+
+            <label>Telefone:</label>
+
+            <input
+              type="tel"
+              placeholder="Digite seu telefone"
+            />
+
+            <label>Senha:</label>
+
+            <input
+              type="password"
+              placeholder="Digite sua senha"
+            />
+
+            <button type="submit">
+              Criar conta
+            </button>
+
+          </form>
+
+          <button onClick={voltarLogin}>
+            ← Voltar para login
           </button>
 
-        </div>
+        </main>
+      )}
 
-      </div>
+      {tela !== "login" && tela !== "criarConta" && (
+        <header className="menu-header">
 
-    </main>
-  )}
+          <h1>Barraca da Domingas</h1>
 
-  {tela === "carrinho" && (
-    <main className="menu-content">
+          <nav>
 
-      <button onClick={voltarCardapio}>
-        ← Voltar ao cardápio
-      </button>
+            <a href="#" onClick={voltarCardapio}>
+              Cardápio
+            </a>
 
-      <h2>Meu Carrinho</h2>
+            <a href="#">
+              Meus pedidos
+            </a>
 
-      <p>Confira os produtos adicionados</p>
+            <a href="#" onClick={abrirCarrinho}>
+              🛒 Carrinho ({quantidadeTotal()})
+            </a>
 
-      {carrinho.length === 0 ? (
+          </nav>
 
-        <p>Seu carrinho está vazio.</p>
+        </header>
+      )}
 
-      ) : (
+      {tela === "cardapio" && (
+        <main className="menu-content">
 
-        <div>
+          <h2>Cardápio</h2>
 
-          {carrinho.map((produto) => {
+          <p>Escolha seus produtos</p>
 
-            const valor = Number(
-              produto.preco
-                .replace("R$ ", "")
-                .replace(".", "")
-                .replace(",", ".")
-            )
+          <div className="products">
 
-            const quantidade = produto.quantidade || 1
-            const subtotal = valor * quantidade
-
-            return (
+            {produtos.map((produto) => (
               <div
-                key={produto.nome}
                 className="product-card"
-                style={{ marginBottom: "20px" }}
+                key={produto.nome}
               >
+
+                <div className="product-image">
+                  Imagem
+                </div>
 
                 <h3>{produto.nome}</h3>
 
@@ -265,45 +297,139 @@ return (
 
                 <strong>{produto.preco}</strong>
 
-                <p>
-                  Quantidade:{" "}
-                  <strong>{quantidade}</strong>
-                </p>
-
-                <p>
-                  Subtotal:{" "}
-                  <strong>
-                    R$ {subtotal.toFixed(2).replace(".", ",")}
-                  </strong>
-                </p>
-
                 <button
-                  onClick={() => removerDoCarrinho(produto.nome)}
+                  onClick={() => abrirDetalhes(produto)}
                 >
-                  Remover
+                  Ver detalhes
                 </button>
 
               </div>
-            )
-          })}
-
-          <div style={{ marginTop: "30px" }}>
-
-            <h3>
-              Total: R$ {calcularTotal().toFixed(2).replace(".", ",")}
-            </h3>
+            ))}
 
           </div>
 
-        </div>
+        </main>
       )}
 
-    </main>
-  )}
+      {tela === "detalhes" && produtoSelecionado && (
+        <main className="menu-content">
 
-</div>
+          <button onClick={voltarCardapio}>
+            ← Voltar ao cardápio
+          </button>
 
-)
+          <div className="product-detail">
+
+            <div className="product-detail-image">
+              Imagem do produto
+            </div>
+
+            <div className="product-detail-info">
+
+              <h2>{produtoSelecionado.nome}</h2>
+
+              <p>{produtoSelecionado.descricao}</p>
+
+              <strong className="product-detail-price">
+                {produtoSelecionado.preco}
+              </strong>
+
+              <button
+                className="add-cart-button"
+                onClick={adicionarAoCarrinho}
+              >
+                Adicionar ao carrinho
+              </button>
+
+            </div>
+
+          </div>
+
+        </main>
+      )}
+
+      {tela === "carrinho" && (
+        <main className="menu-content">
+
+          <button onClick={voltarCardapio}>
+            ← Voltar ao cardápio
+          </button>
+
+          <h2>Meu Carrinho</h2>
+
+          <p>Confira os produtos adicionados</p>
+
+          {carrinho.length === 0 ? (
+
+            <p>Seu carrinho está vazio.</p>
+
+          ) : (
+
+            <div>
+
+              {carrinho.map((produto) => {
+
+                const valor = Number(
+                  produto.preco
+                    .replace("R$ ", "")
+                    .replace(".", "")
+                    .replace(",", ".")
+                )
+
+                const quantidade = produto.quantidade || 1
+                const subtotal = valor * quantidade
+
+                return (
+                  <div
+                    key={produto.nome}
+                    className="product-card"
+                    style={{ marginBottom: "20px" }}
+                  >
+
+                    <h3>{produto.nome}</h3>
+
+                    <p>{produto.descricao}</p>
+
+                    <strong>{produto.preco}</strong>
+
+                    <p>
+                      Quantidade:{" "}
+                      <strong>{quantidade}</strong>
+                    </p>
+
+                    <p>
+                      Subtotal:{" "}
+                      <strong>
+                        R$ {subtotal.toFixed(2).replace(".", ",")}
+                      </strong>
+                    </p>
+
+                    <button
+                      onClick={() => removerDoCarrinho(produto.nome)}
+                    >
+                      Remover
+                    </button>
+
+                  </div>
+                )
+              })}
+
+              <div style={{ marginTop: "30px" }}>
+
+                <h3>
+                  Total: R$ {calcularTotal().toFixed(2).replace(".", ",")}
+                </h3>
+
+              </div>
+
+            </div>
+          )}
+
+        </main>
+      )}
+
+    </div>
+  )
 }
 
 export default App
