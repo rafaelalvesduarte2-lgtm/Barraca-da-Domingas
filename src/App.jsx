@@ -111,10 +111,37 @@ function App() {
   }
 
   function removerDoCarrinho(nomeProduto) {
-    setCarrinho(
-      carrinho.filter((produto) => produto.nome !== nomeProduto)
+  setCarrinho(
+    carrinho.filter((produto) => produto.nome !== nomeProduto)
+  )
+}
+function aumentarQuantidade(nomeProduto) {
+  setCarrinho(
+    carrinho.map((produto) =>
+      produto.nome === nomeProduto
+        ? {
+            ...produto,
+            quantidade: (produto.quantidade || 1) + 1
+          }
+        : produto
     )
-  }
+  )
+}
+
+function diminuirQuantidade(nomeProduto) {
+  setCarrinho(
+    carrinho
+      .map((produto) =>
+        produto.nome === nomeProduto
+          ? {
+              ...produto,
+              quantidade: (produto.quantidade || 1) - 1
+            }
+          : produto
+      )
+      .filter((produto) => produto.quantidade > 0)
+  )
+}
 
   function abrirCarrinho(event) {
     if (event) {
