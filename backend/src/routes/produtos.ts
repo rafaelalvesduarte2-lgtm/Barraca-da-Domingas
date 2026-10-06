@@ -12,6 +12,24 @@ router.get('/', (req, res) => {
   res.json(produtos);
 });
 
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+
+  const produto = db.prepare(`
+    SELECT id, nome, descricao, preco, ativo
+    FROM produtos
+    WHERE id = ?
+  `).get(id);
+
+  if (!produto) {
+    return res.status(404).json({
+      mensagem: 'Produto não encontrado.'
+    });
+  }
+
+  res.json(produto);
+});
+
 router.post('/', (req, res) => {
   const { nome, descricao, preco } = req.body;
 
