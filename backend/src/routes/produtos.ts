@@ -32,4 +32,31 @@ router.post('/', (req, res) => {
   });
 });
 
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const { nome, descricao, preco } = req.body;
+
+  if (!nome || preco === undefined) {
+    return res.status(400).json({
+      mensagem: 'Nome e preço são obrigatórios.'
+    });
+  }
+
+  const resultado = db.prepare(`
+    UPDATE produtos
+    SET nome = ?, descricao = ?, preco = ?
+    WHERE id = ?
+  `).run(nome, descricao || null, preco, id);
+
+  if (resultado.changes === 0) {
+    return res.status(404).json({
+      mensagem: 'Produto não encontrado.'
+    });
+  }
+
+  res.json({
+    mensagem: 'Produto atualizado com sucesso!'
+  });
+});
+
 export default router;
