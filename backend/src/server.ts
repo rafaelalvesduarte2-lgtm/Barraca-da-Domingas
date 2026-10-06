@@ -1,8 +1,11 @@
 import express from 'express';
+import produtosRoutes from './routes/produtos';
 
 const app = express();
 
 app.use(express.json());
+
+app.use('/produtos', produtosRoutes);
 
 app.get('/', (req, res) => {
   res.json({
