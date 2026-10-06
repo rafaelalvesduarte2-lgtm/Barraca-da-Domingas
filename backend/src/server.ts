@@ -1,5 +1,6 @@
 import express from 'express';
 import produtosRoutes from './routes/produtos';
+import './database/init';
 
 const app = express();
 
