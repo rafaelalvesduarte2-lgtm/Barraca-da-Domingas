@@ -59,4 +59,24 @@ router.put('/:id', (req, res) => {
   });
 });
 
+router.patch('/:id/desativar', (req, res) => {
+  const { id } = req.params;
+
+  const resultado = db.prepare(`
+    UPDATE produtos
+    SET ativo = 0
+    WHERE id = ?
+  `).run(id);
+
+  if (resultado.changes === 0) {
+    return res.status(404).json({
+      mensagem: 'Produto não encontrado.'
+    });
+  }
+
+  res.json({
+    mensagem: 'Produto desativado com sucesso!'
+  });
+});
+
 export default router;
