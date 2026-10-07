@@ -4,6 +4,8 @@ function App() {
   const [tela, setTela] = useState("login")
   const [produtoSelecionado, setProdutoSelecionado] = useState(null)
   const [carrinho, setCarrinho] = useState([])
+  const [formaPagamento, setFormaPagamento] = useState("")
+  const [endereco, setEndereco] = useState("")
 
   const produtos = [
     {
@@ -150,6 +152,10 @@ function App() {
     }
 
     setTela("carrinho")
+  }
+
+  function finalizarPedido() {
+    setTela("finalizacao")
   }
 
   function calcularTotal() {
@@ -472,10 +478,119 @@ function App() {
                   Total: R$ {calcularTotal().toFixed(2).replace(".", ",")}
                 </h3>
 
+                <button
+                  onClick={finalizarPedido}
+                  disabled={carrinho.length === 0}
+                >
+                  Finalizar pedido
+                </button>
+
               </div>
 
             </div>
           )}
+
+        </main>
+      )}
+
+      {tela === "finalizacao" && (
+        <main className="menu-content">
+
+          <button onClick={abrirCarrinho}>
+            ← Voltar ao carrinho
+          </button>
+
+          <h2>Finalizar Pedido</h2>
+
+          <p>Confira os dados do seu pedido antes de confirmar.</p>
+
+          <h3>Resumo do pedido</h3>
+
+          {carrinho.map((produto) => {
+
+            const valor = Number(
+              produto.preco
+                .replace("R$ ", "")
+                .replace(".", "")
+                .replace(",", ".")
+            )
+
+            const quantidade = produto.quantidade || 1
+            const subtotal = valor * quantidade
+
+            return (
+              <div
+                key={produto.nome}
+                className="product-card"
+                style={{ marginBottom: "15px" }}
+              >
+
+                <h3>{produto.nome}</h3>
+
+                <p>
+                  Quantidade: {quantidade}
+                </p>
+
+                <p>
+                  Subtotal: R$ {subtotal.toFixed(2).replace(".", ",")}
+                </p>
+
+              </div>
+            )
+          })}
+
+          <h3>
+            Total: R$ {calcularTotal().toFixed(2).replace(".", ",")}
+          </h3>
+
+          <div style={{ marginTop: "30px" }}>
+
+            <h3>Endereço de entrega</h3>
+
+            <input
+              type="text"
+              placeholder="Digite seu endereço"
+              value={endereco}
+              onChange={(event) => setEndereco(event.target.value)}
+            />
+
+          </div>
+
+          <div style={{ marginTop: "20px" }}>
+
+            <h3>Forma de pagamento</h3>
+
+            <select
+              value={formaPagamento}
+              onChange={(event) => setFormaPagamento(event.target.value)}
+            >
+
+              <option value="">
+                Selecione uma forma de pagamento
+              </option>
+
+              <option value="Pix">
+                Pix
+              </option>
+
+              <option value="Dinheiro">
+                Dinheiro
+              </option>
+
+              <option value="Cartão">
+                Cartão
+              </option>
+
+            </select>
+
+          </div>
+
+          <button
+            style={{ marginTop: "30px" }}
+            disabled={!endereco || !formaPagamento}
+          >
+            Confirmar pedido
+          </button>
 
         </main>
       )}
