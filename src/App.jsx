@@ -111,37 +111,38 @@ function App() {
   }
 
   function removerDoCarrinho(nomeProduto) {
-  setCarrinho(
-    carrinho.filter((produto) => produto.nome !== nomeProduto)
-  )
-}
-function aumentarQuantidade(nomeProduto) {
-  setCarrinho(
-    carrinho.map((produto) =>
-      produto.nome === nomeProduto
-        ? {
-            ...produto,
-            quantidade: (produto.quantidade || 1) + 1
-          }
-        : produto
+    setCarrinho(
+      carrinho.filter((produto) => produto.nome !== nomeProduto)
     )
-  )
-}
+  }
 
-function diminuirQuantidade(nomeProduto) {
-  setCarrinho(
-    carrinho
-      .map((produto) =>
+  function aumentarQuantidade(nomeProduto) {
+    setCarrinho(
+      carrinho.map((produto) =>
         produto.nome === nomeProduto
           ? {
               ...produto,
-              quantidade: (produto.quantidade || 1) - 1
+              quantidade: (produto.quantidade || 1) + 1
             }
           : produto
       )
-      .filter((produto) => produto.quantidade > 0)
-  )
-}
+    )
+  }
+
+  function diminuirQuantidade(nomeProduto) {
+    setCarrinho(
+      carrinho
+        .map((produto) =>
+          produto.nome === nomeProduto
+            ? {
+                ...produto,
+                quantidade: (produto.quantidade || 1) - 1
+              }
+            : produto
+        )
+        .filter((produto) => produto.quantidade > 0)
+    )
+  }
 
   function abrirCarrinho(event) {
     if (event) {
@@ -420,9 +421,33 @@ function diminuirQuantidade(nomeProduto) {
                     <strong>{produto.preco}</strong>
 
                     <p>
-                      Quantidade:{" "}
-                      <strong>{quantidade}</strong>
+                      Quantidade:
                     </p>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        marginBottom: "10px"
+                      }}
+                    >
+
+                      <button
+                        onClick={() => diminuirQuantidade(produto.nome)}
+                      >
+                        −
+                      </button>
+
+                      <strong>{quantidade}</strong>
+
+                      <button
+                        onClick={() => aumentarQuantidade(produto.nome)}
+                      >
+                        +
+                      </button>
+
+                    </div>
 
                     <p>
                       Subtotal:{" "}
